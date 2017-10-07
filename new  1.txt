@@ -1,0 +1,20 @@
+void treebag(int s,int v)
+{
+	int edge = head[s];
+	while(edge>0)
+	{
+		int b = end[edge];
+		for(int j=0;j<=v-cost[b];j++)
+		{
+			f[b][j]=f[s][j];
+		}
+		treebag(b,v-cost[b]);
+		for(int j=cost[b];j<=v;j++)
+		{
+			f[s][j]=max(f[s][j],f[b][j-cost[b]]+value[b]);
+		}
+		edge=next[edge];
+	}
+}
+
+

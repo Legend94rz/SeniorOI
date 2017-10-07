@@ -1,0 +1,47 @@
+type
+	node=record
+		d,x:longint;
+		end;
+var
+	i,j,n,m,mid:Longint;
+	a,f:array[0..100001]of longint;
+	q:array[0..100001]of node;
+	l,r:longint;
+function check(key:longint):Boolean;
+var
+	i:longint;
+	l,r:longint;
+begin
+	fillchar(f,sizeof(f),0);
+	l:=0;r:=1;q[r].d:=0;q[r].x:=0;
+	for i:=1 to n do
+		begin
+			while q[l+1].x<i-key-1 do inc(l);
+			f[i]:=q[l+1].d+a[i];
+			while (q[r].d>f[i])and(r>l) do dec(r);
+			inc(r);q[r].d:=f[i];q[r].x:=i;
+		end;
+	for i:=n-key to n do
+{
+这里从n-key~n循环的原因：
+因为Dp是从左边开始的，这会保证从左边开始的题目之间的间隔在key之间，但不保证与右边会间隔key个，即不一定合法；
+而考虑后面的key个题目，它们一定满足相邻两个题目间隔在key之间(因为后面没题了)，只有这些是合法的。它们的f值才有意义。
+}
+		if f[i]<=m then
+			exit(true);
+	exit(false);
+end;
+begin
+	readln(n,m);
+	for I:=1 to n do read(a[i]);
+	l:=1;r:=n;
+	repeat
+		mid:=(l+r)shr 1;
+		if check(mid) then
+			r:=mid-1
+		else
+			l:=mid+1;
+	until l>r;
+	writeln(l);
+end.
+
